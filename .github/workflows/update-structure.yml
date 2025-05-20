@@ -7,18 +7,23 @@ on:
       - 'data/**'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   update-structure:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/checkout@v4
       with:
-        node-version: '18'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
         
     - name: Generate file structure
       run: |
@@ -33,7 +38,7 @@ jobs:
             const items = fs.readdirSync(dirPath);
             
             for (const item of items) {
-              if (item.startsWith('.')) continue; // Skip hidden files
+              if (item.startsWith('.')) continue;
               
               const fullPath = path.join(dirPath, item);
               const relativePath = basePath ? `${basePath}/${item}` : item;
@@ -61,22 +66,23 @@ jobs:
           return structure;
         }
         
-        // Generate structure for data directory
         const dataPath = './data';
         if (fs.existsSync(dataPath)) {
           const structure = getDirectoryStructure(dataPath);
           
-          // Write to a JavaScript file that can be imported
-          const output = `// Auto-generated file structure
-        // Last updated: ${new Date().toISOString()}
-        
-        window.DATABASE_STRUCTURE = ${JSON.stringify(structure, null, 2)};
-        `;
+          const output = `// Auto-generated file structure for iBOL Europe BOLD curation datasets
+// Last updated: ${new Date().toISOString()}
+// Repository: bge-barcoding/manual-curation
+
+window.DATABASE_STRUCTURE = ${JSON.stringify(structure, null, 2)};
+`;
           
           fs.writeFileSync('file-structure.js', output);
           console.log('File structure updated successfully');
+          console.log(`Generated structure for ${Object.keys(structure).length} top-level taxonomic groups`);
         } else {
           console.log('Data directory not found');
+          process.exit(1);
         }
         EOF
         
@@ -84,8 +90,8 @@ jobs:
         
     - name: Commit updated structure
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
         git add file-structure.js
         if git diff --staged --quiet; then
           echo "No changes to commit"
