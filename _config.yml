@@ -14,6 +14,7 @@ include:
 exclude:
   - README.md
   - .gitignore
+  - dir_tree.md
 
 # Set the base URL (will be automatically set by GitHub Pages)
 baseurl: ""
