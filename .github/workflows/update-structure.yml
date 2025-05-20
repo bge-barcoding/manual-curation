@@ -1,0 +1,95 @@
+name: Update File Structure
+
+on:
+  push:
+    branches: [ main ]
+    paths: 
+      - 'data/**'
+  workflow_dispatch:
+
+jobs:
+  update-structure:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Generate file structure
+      run: |
+        cat > generate-structure.js << 'EOF'
+        const fs = require('fs');
+        const path = require('path');
+        
+        function getDirectoryStructure(dirPath, basePath = '') {
+          const structure = {};
+          
+          try {
+            const items = fs.readdirSync(dirPath);
+            
+            for (const item of items) {
+              if (item.startsWith('.')) continue; // Skip hidden files
+              
+              const fullPath = path.join(dirPath, item);
+              const relativePath = basePath ? `${basePath}/${item}` : item;
+              const stats = fs.statSync(fullPath);
+              
+              if (stats.isDirectory()) {
+                structure[item] = {
+                  type: 'directory',
+                  path: relativePath,
+                  children: getDirectoryStructure(fullPath, relativePath)
+                };
+              } else {
+                structure[item] = {
+                  type: 'file',
+                  path: relativePath,
+                  size: stats.size,
+                  modified: stats.mtime.toISOString()
+                };
+              }
+            }
+          } catch (error) {
+            console.error(`Error reading directory ${dirPath}:`, error);
+          }
+          
+          return structure;
+        }
+        
+        // Generate structure for data directory
+        const dataPath = './data';
+        if (fs.existsSync(dataPath)) {
+          const structure = getDirectoryStructure(dataPath);
+          
+          // Write to a JavaScript file that can be imported
+          const output = `// Auto-generated file structure
+        // Last updated: ${new Date().toISOString()}
+        
+        window.DATABASE_STRUCTURE = ${JSON.stringify(structure, null, 2)};
+        `;
+          
+          fs.writeFileSync('file-structure.js', output);
+          console.log('File structure updated successfully');
+        } else {
+          console.log('Data directory not found');
+        }
+        EOF
+        
+        node generate-structure.js
+        
+    - name: Commit updated structure
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add file-structure.js
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Auto-update file structure [skip ci]"
+          git push
+        fi
