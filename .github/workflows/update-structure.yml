@@ -41,7 +41,7 @@ jobs:
               if (item.startsWith('.')) continue;
               
               const fullPath = path.join(dirPath, item);
-              const relativePath = basePath ? `${basePath}/${item}` : item;
+              const relativePath = basePath ? basePath + '/' + item : item;
               const stats = fs.statSync(fullPath);
               
               if (stats.isDirectory()) {
@@ -60,7 +60,7 @@ jobs:
               }
             }
           } catch (error) {
-            console.error(`Error reading directory ${dirPath}:`, error);
+            console.error('Error reading directory ' + dirPath + ':', error);
           }
           
           return structure;
@@ -70,16 +70,14 @@ jobs:
         if (fs.existsSync(dataPath)) {
           const structure = getDirectoryStructure(dataPath);
           
-          const output = `// Auto-generated file structure for iBOL Europe BOLD curation datasets
-// Last updated: ${new Date().toISOString()}
-// Repository: bge-barcoding/manual-curation
-
-window.DATABASE_STRUCTURE = ${JSON.stringify(structure, null, 2)};
-`;
+          const output = '// Auto-generated file structure for iBOL Europe BOLD curation datasets\n' +
+                        '// Last updated: ' + new Date().toISOString() + '\n' +
+                        '// Repository: bge-barcoding/manual-curation\n\n' +
+                        'window.DATABASE_STRUCTURE = ' + JSON.stringify(structure, null, 2) + ';\n';
           
           fs.writeFileSync('file-structure.js', output);
           console.log('File structure updated successfully');
-          console.log(`Generated structure for ${Object.keys(structure).length} top-level taxonomic groups`);
+          console.log('Generated structure for ' + Object.keys(structure).length + ' top-level taxonomic groups');
         } else {
           console.log('Data directory not found');
           process.exit(1);
