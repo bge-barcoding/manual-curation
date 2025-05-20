@@ -1,6 +1,6 @@
 # GitHub Pages configuration
-title: "Taxonomic Database Browser"
-description: "Browse and download curated taxonomic database files"
+title: "BOLD Curation Database Browser"
+description: "Browse and download database files for curation"
 
 # Enable GitHub Pages
 plugins:
