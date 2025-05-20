@@ -290,7 +290,7 @@ class DatabaseBrowser {
         try {
             const GITHUB_USER = 'bge-barcoding';
             const GITHUB_REPO = 'manual-curation';
-            const downloadUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${filePath}`;
+            const downloadUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/data/${filePath}`;
             
             // Create temporary download link
             const link = document.createElement('a');
