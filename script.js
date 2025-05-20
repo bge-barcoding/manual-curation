@@ -42,6 +42,7 @@ class DatabaseBrowser {
             if (window.DATABASE_STRUCTURE) {
                 this.fileStructure = window.DATABASE_STRUCTURE;
                 this.allPaths = this.getAllPaths(this.fileStructure);
+                console.log('Loaded structure from file-structure.js');
                 return;
             }
         } catch (error) {
@@ -49,14 +50,19 @@ class DatabaseBrowser {
         }
         
         try {
-            // Fallback to GitHub API
+            // Fallback to GitHub API to load data directory
             const response = await this.fetchGitHubContents('data');
-            this.fileStructure = this.buildFileStructure(response);
+            this.fileStructure = await this.buildFileStructureFromAPI(response);
             this.allPaths = this.getAllPaths(this.fileStructure);
+            console.log('Loaded structure from GitHub API');
         } catch (error) {
-            console.log('Using fallback structure');
-            this.fileStructure = this.getFallbackStructure();
-            this.allPaths = this.getAllPaths(this.fileStructure);
+            console.error('Failed to load file structure:', error);
+            document.getElementById('fileBrowser').innerHTML = `
+                <div class="empty-folder">
+                    <p>Unable to load database structure</p>
+                    <p>Please check back later or contact support</p>
+                </div>
+            `;
         }
     }
 
@@ -71,30 +77,38 @@ class DatabaseBrowser {
     }
 
     async fetchGitHubContents(path = '') {
-        // Replace with your GitHub username and repository name
         const GITHUB_USER = 'bge-barcoding';
         const GITHUB_REPO = 'manual-curation';
         const API_URL = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${path}`;
         
-        try {
-            const response = await fetch(API_URL);
-            if (!response.ok) throw new Error('Failed to fetch');
-            return await response.json();
-        } catch (error) {
-            throw error;
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${path}: ${response.status}`);
         }
+        return await response.json();
     }
 
-    buildFileStructure(contents, basePath = '') {
+    async buildFileStructureFromAPI(contents, basePath = '') {
         const structure = {};
         
         for (const item of contents) {
             if (item.type === 'dir') {
-                structure[item.name] = {
-                    type: 'directory',
-                    path: item.path,
-                    children: {} // Will be loaded on demand
-                };
+                // Recursively load subdirectory contents
+                try {
+                    const subContents = await this.fetchGitHubContents(item.path);
+                    structure[item.name] = {
+                        type: 'directory',
+                        path: item.path,
+                        children: await this.buildFileStructureFromAPI(subContents, item.path)
+                    };
+                } catch (error) {
+                    // If we can't load subdirectory, create empty placeholder
+                    structure[item.name] = {
+                        type: 'directory',
+                        path: item.path,
+                        children: {}
+                    };
+                }
             } else {
                 structure[item.name] = {
                     type: 'file',
@@ -106,52 +120,6 @@ class DatabaseBrowser {
         }
         
         return structure;
-    }
-
-    getFallbackStructure() {
-        // Fallback structure based on your directory tree
-        // This creates a nested object structure
-        return {
-            "Acanthocephala": {
-                type: "directory",
-                children: {
-                    "Archiacanthocephala": {
-                        type: "directory",
-                        children: {
-                            "Moniliformida": { type: "directory", children: {} },
-                            "Oligacanthorhynchida": { type: "directory", children: {} }
-                        }
-                    },
-                    "Eoacanthocephala": {
-                        type: "directory",
-                        children: {
-                            "Neoechinorhynchida": { type: "directory", children: {} }
-                        }
-                    },
-                    "Palaeacanthocephala": {
-                        type: "directory",
-                        children: {
-                            "Echinorhynchida": { type: "directory", children: {} },
-                            "Polymorphida": { type: "directory", children: {} }
-                        }
-                    }
-                }
-            },
-            "Annelida": {
-                type: "directory",
-                children: {
-                    "Clitellata": {
-                        type: "directory",
-                        children: {
-                            "Acanthobdellida": { type: "directory", children: {} },
-                            "Arhynchobdellida": { type: "directory", children: {} },
-                            "Branchiobdellida": { type: "directory", children: {} }
-                        }
-                    }
-                }
-            }
-            // Add more structure as needed - this is just a sample
-        };
     }
 
     getAllPaths(structure, currentPath = '', paths = []) {
@@ -320,7 +288,6 @@ class DatabaseBrowser {
 
     async downloadFile(filePath) {
         try {
-            // For GitHub raw files, construct direct download URL
             const GITHUB_USER = 'bge-barcoding';
             const GITHUB_REPO = 'manual-curation';
             const downloadUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${filePath}`;

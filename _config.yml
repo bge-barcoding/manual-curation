@@ -1,6 +1,6 @@
 # GitHub Pages configuration
-title: "BOLD Curation Database Browser"
-description: "Browse and download database files for curation"
+title: "iBOL Europe BOLD curation datasets"
+description: "Browse and download curated taxonomic database files for BOLD manual curation"
 
 # Enable GitHub Pages
 plugins:
@@ -9,12 +9,13 @@ plugins:
 # Include all files (including data directory)
 include:
   - data
+  - assets
 
 # Exclude unnecessary files
 exclude:
   - README.md
   - .gitignore
-  - dir_tree.md
+  - _instructions
 
 # Set the base URL (will be automatically set by GitHub Pages)
 baseurl: ""
