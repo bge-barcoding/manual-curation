@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxonomic Database Browser</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧬 Taxonomic Database Browser</h1>
+            <p>Browse and download curated database files organized by taxonomic classification</p>
+        </header>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for a taxon (e.g., Arthropoda, Mammalia)...">
+            <button id="clearSearch">Clear</button>
+        </div>
+
+        <div class="breadcrumb" id="breadcrumb">
+            <span class="breadcrumb-item" data-path="">📁 Root</span>
+        </div>
+
+        <div class="file-browser" id="fileBrowser">
+            <div class="loading">Loading database structure...</div>
+        </div>
+
+        <footer>
+            <p>Database files are automatically updated. Last updated: <span id="lastUpdated"></span></p>
+        </footer>
+    </div>
+
+    <!-- Auto-generated file structure (loaded dynamically) -->
+    <script src="script.js"></script>
+</body>
+</html>

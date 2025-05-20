@@ -1,0 +1,22 @@
+# GitHub Pages configuration
+title: "Taxonomic Database Browser"
+description: "Browse and download curated taxonomic database files"
+
+# Enable GitHub Pages
+plugins:
+  - jekyll-sitemap
+
+# Include all files (including data directory)
+include:
+  - data
+
+# Exclude unnecessary files
+exclude:
+  - README.md
+  - .gitignore
+
+# Set the base URL (will be automatically set by GitHub Pages)
+baseurl: ""
+
+# Theme (optional - using default)
+# theme: minima
