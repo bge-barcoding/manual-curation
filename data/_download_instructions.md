@@ -19,3 +19,5 @@
 3. Put the downloaded database file into the data folder of the manual curation tool.
 
 4. Start the manual curation tool.
+
+:)
