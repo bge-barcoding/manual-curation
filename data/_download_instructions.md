@@ -6,6 +6,8 @@
    
    ![image](https://github.com/user-attachments/assets/233aa5b8-1659-4948-b53c-678851c22a38)
 
+   ---
+
    **SEARCH:**
    
    ![image](https://github.com/user-attachments/assets/b76f779a-5ddc-4570-9246-9a1985f78c3b)
