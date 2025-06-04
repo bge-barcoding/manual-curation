@@ -2,6 +2,7 @@ class DatabaseBrowser {
     constructor() {
         this.currentPath = '';
         this.fileStructure = {};
+        this.curationToolStructure = {};
         this.allPaths = [];
         this.init();
     }
@@ -9,6 +10,7 @@ class DatabaseBrowser {
     async init() {
         this.setupEventListeners();
         await this.loadFileStructure();
+        this.renderCurationTools();
         this.renderCurrentDirectory();
         this.updateLastUpdated();
     }
@@ -43,6 +45,11 @@ class DatabaseBrowser {
                 this.fileStructure = window.DATABASE_STRUCTURE;
                 this.allPaths = this.getAllPaths(this.fileStructure);
                 console.log('Loaded structure from file-structure.js');
+            }
+            
+            if (window.CURATION_TOOL_STRUCTURE) {
+                this.curationToolStructure = window.CURATION_TOOL_STRUCTURE;
+                console.log('Loaded curation tools from file-structure.js');
                 return;
             }
         } catch (error) {
@@ -192,6 +199,38 @@ class DatabaseBrowser {
         return text.replace(regex, '<mark>$1</mark>');
     }
 
+    renderCurationTools() {
+        const curationToolsContainer = document.getElementById('curationTools');
+        
+        if (!this.curationToolStructure || Object.keys(this.curationToolStructure).length === 0) {
+            curationToolsContainer.style.display = 'none';
+            return;
+        }
+
+        curationToolsContainer.style.display = 'block';
+        
+        const toolItems = Object.entries(this.curationToolStructure).map(([name, item]) => {
+            const icon = item.type === 'directory' ? '🛠️' : '📄';
+            const size = item.size ? this.formatFileSize(item.size) : '';
+            const info = item.type === 'directory' ? 'Tool Directory' : size;
+            
+            return `
+                <div class="curation-tool-item" onclick="browser.downloadCurationTool('${item.path || name}')">
+                    <span class="tool-icon">${icon}</span>
+                    <div class="tool-name">${name}</div>
+                    <div class="tool-info">${info}</div>
+                </div>
+            `;
+        }).join('');
+
+        curationToolsContainer.innerHTML = `
+            <h2>🛠️ Curation Tools</h2>
+            <div class="curation-tools-grid">
+                ${toolItems}
+            </div>
+        `;
+    }
+
     renderCurrentDirectory() {
         const fileBrowser = document.getElementById('fileBrowser');
         const currentStructure = this.getCurrentStructure();
@@ -301,6 +340,25 @@ class DatabaseBrowser {
             document.body.removeChild(link);
         } catch (error) {
             alert('Error downloading file. Please try again.');
+            console.error('Download error:', error);
+        }
+    }
+
+    async downloadCurationTool(filePath) {
+        try {
+            const GITHUB_USER = 'bge-barcoding';
+            const GITHUB_REPO = 'manual-curation';
+            const downloadUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/curation_tool/${filePath}`;
+            
+            // Create temporary download link
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = filePath.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            alert('Error downloading curation tool. Please try again.');
             console.error('Download error:', error);
         }
     }

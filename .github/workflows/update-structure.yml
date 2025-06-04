@@ -68,21 +68,34 @@ jobs:
         }
         
         const dataPath = './data';
+        const curationToolPath = './curation_tool';
+        const output = {
+          data: {},
+          curationTool: {}
+        };
+        
         if (fs.existsSync(dataPath)) {
-          const structure = getDirectoryStructure(dataPath);
-          
-          const output = '// Auto-generated file structure for iBOL Europe BOLD curation datasets\n' +
-                        '// Last updated: ' + new Date().toISOString() + '\n' +
-                        '// Repository: bge-barcoding/manual-curation\n\n' +
-                        'window.DATABASE_STRUCTURE = ' + JSON.stringify(structure, null, 2) + ';\n';
-          
-          fs.writeFileSync('file-structure.js', output);
-          console.log('File structure updated successfully');
-          console.log('Generated structure for ' + Object.keys(structure).length + ' top-level taxonomic groups');
+          output.data = getDirectoryStructure(dataPath);
+          console.log('Generated structure for ' + Object.keys(output.data).length + ' top-level taxonomic groups');
         } else {
           console.log('Data directory not found');
-          process.exit(1);
         }
+        
+        if (fs.existsSync(curationToolPath)) {
+          output.curationTool = getDirectoryStructure(curationToolPath);
+          console.log('Generated structure for curation tool with ' + Object.keys(output.curationTool).length + ' items');
+        } else {
+          console.log('Curation tool directory not found');
+        }
+        
+        const outputContent = '// Auto-generated file structure for iBOL Europe BOLD curation datasets\n' +
+                      '// Last updated: ' + new Date().toISOString() + '\n' +
+                      '// Repository: bge-barcoding/manual-curation\n\n' +
+                      'window.DATABASE_STRUCTURE = ' + JSON.stringify(output.data, null, 2) + ';\n' +
+                      'window.CURATION_TOOL_STRUCTURE = ' + JSON.stringify(output.curationTool, null, 2) + ';\n';
+        
+        fs.writeFileSync('file-structure.js', outputContent);
+        console.log('File structure updated successfully');
         EOF
         
         node generate-structure.js

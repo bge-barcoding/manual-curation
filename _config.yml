@@ -6,10 +6,11 @@ description: "Browse and download curated taxonomic database files for BOLD manu
 plugins:
   - jekyll-sitemap
 
-# Include all files (including data directory)
+# Include all files (including data and curation_tool directories)
 include:
   - data
   - assets
+  - curation_tool
 
 # Exclude unnecessary files
 exclude:
