@@ -12,11 +12,11 @@
    
    ![image](https://github.com/user-attachments/assets/b76f779a-5ddc-4570-9246-9a1985f78c3b)
 
-2. Select the database file (.db) and download it using the download icon:
+2. Select the database file (.db.zip) and download it using the download icon:
 
    ![image](https://github.com/user-attachments/assets/6e6adf48-73ae-441d-bf50-755f64d0467f)
 
-3. Put the downloaded database file into the data folder of the manual curation tool.
+3. Extract the downloaded database file and copy/move it into the data folder of the manual curation tool.
 
 4. Start the manual curation tool.
 
