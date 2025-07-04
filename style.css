@@ -302,3 +302,74 @@ footer {
     background-color: #fff3cd !important;
     border-left: 4px solid #ffc107;
 }
+
+/* Video and FAQ link section styles */
+.extra-links {
+    margin-top: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.extra-links h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #3498db;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.extra-links a {
+    display: inline-block;
+    margin: 10px;
+    padding: 12px 20px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+    font-weight: 500;
+}
+
+.extra-links a:hover {
+    background-color: #0056b3;
+}
+
+/* FAQ page styling (shared if reused) */
+h1, h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+p, ul {
+    margin-bottom: 15px;
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
