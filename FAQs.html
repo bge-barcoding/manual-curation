@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FAQ – iBOL Europe Curation Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>❓ Frequently Asked Questions (FAQ)</h1>
+
+        <h2>1. How do I load a new dataset?</h2>
+        <p>First, download the dataset you wish to curate. Then, unzip it and copy the database file (.db) into the <code>data/</code> subfolder of the curation tool. After that, click <strong>Load Dataset</strong> in the Control Panel and select the copied file. Once loaded, click <strong>Refresh Table</strong> to view the records.</p>
+
+        <h2>2. What do the row colors in the table mean?</h2>
+        <ul>
+            <li><strong>Grey</strong>: Pre-selected representative sequences (can be invalidated).</li>
+            <li><strong>Green</strong>: Validated records (manually accepted).</li>
+            <li><strong>Red</strong>: Excluded or invalid records (hidden by default; press “Show Invalid Records” to view).</li>
+            <li><strong>White</strong>: Unselected records.</li>
+        </ul>
+
+        <h2>3. How can I view more columns in the table?</h2>
+        <p>Use the <strong>Columns</strong> checkbox menu in the Control Panel to show or hide columns.</p>
+
+        <h2>4. How do I apply or save changes?</h2>
+        <p>Each row has a <strong>Submit</strong> button. You can also use <strong>Submit All on Page</strong> to apply all changes. Changes are stored in a change log.</p>
+
+        <h2>5. Where can I find a record of my edits?</h2>
+        <p>All edits are saved in <code>logs/changes.log</code>. Do <strong>not delete</strong> this file. Send it at the end of the process to:<br>
+        📧 <a href="mailto:curation_tool@snsb.de">curation_tool@snsb.de</a> and <a href="mailto:kuehbandner@snsb.de">kuehbandner@snsb.de</a></p>
+
+        <h2>6. Can I export the data?</h2>
+        <p>Yes, use <strong>Export CSV</strong> to download visible and filtered data.</p>
+
+        <h2>7. Something looks off—how can I reset filters?</h2>
+        <p>Click <strong>Clear Filters</strong> in the Control Panel.</p>
+
+        <h2>8. Is there a quick guide?</h2>
+        <p>No dedicated quick guide button, but:</p>
+        <ul>
+            <li>A detailed manual: <code>user_manual_windows.html</code></li>
+            <li>Red question mark icons in the tool offer contextual help</li>
+        </ul>
+
+        <h2>9. What is BAGS and how is it used?</h2>
+        <p><strong>BAGS</strong> is a dynamic quality score. Click the red question mark icon near the <strong>BAGS</strong> column header for the grading scheme. <code>bags_static</code> shows a pre-computed, sortable version.</p>
+
+        <h2>10. Troubleshooting common issues</h2>
+        <ul>
+            <li><strong>Tool doesn’t start:</strong> Use <code>start_tool.bat</code>. Ensure <code>data/</code> has the right .db files. Allow it to run via Windows Defender if prompted. Try renaming the project folder.</li>
+            <li><strong>Browser doesn’t open:</strong> Open manually at <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
+        </ul>
+
+        <p><a href="index.html">← Back to main page</a></p>
+    </div>
+</body>
+</html>
