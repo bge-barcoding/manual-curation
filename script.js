@@ -225,6 +225,7 @@ class DatabaseBrowser {
 
         curationToolsContainer.innerHTML = `
             <h2>🛠️ Curation Tools</h2>
+            <p><strong>Note:</strong> Updates to the Library Curation Tool will be indicated by version numbers (starting from <code>v1.0.0</code>). Detailed information about changes can be found in the <code>CHANGELOG.md</code> file included in the tool folder.</p>
             <div class="curation-tools-grid">
                 ${toolItems}
             </div>
